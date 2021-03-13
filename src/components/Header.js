@@ -7,7 +7,7 @@ import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddOrder from './AddOrder';
-
+import DeleteOrder from './DeleteOrder';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -15,16 +15,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-export default function Header() {
+export default function Header(props) {
 
     const [addOrderOpen, setAddOrder] = React.useState(false);
+    const [deleteOrderOpen, setdeleteOrder] = React.useState(false);
 
+    const {setResponseData, responseData, deleteList, setDeleteList} = props;
+    
     const handleAddOrderOpen = () => {
         setAddOrder(true);
     }
 
     const handleAddOrderClose = () => {
         setAddOrder(false);
+    }
+
+    const handleDeleteOrderOpen = () => {
+        console.log(deleteList);
+        setdeleteOrder(true);
+    }
+
+    const handleDeleteOrderClose = () => {
+        setDeleteList([]);
+        setdeleteOrder(false);
     }
 
     return (
@@ -34,11 +47,20 @@ export default function Header() {
                 <Button variant='contained'>View Correspondence</Button>
                 <Button variant='contained' onClick={handleAddOrderOpen} className={useStyles.button} startIcon={<AddIcon />}>Add</Button>
                 <Button variant='contained' className={useStyles.button} startIcon={<EditIcon />}>Edit</Button>
-                <Button variant='contained' className={useStyles.button} startIcon={<RemoveIcon />}>Delete</Button>
+                <Button variant='contained' onClick={handleDeleteOrderOpen} className={useStyles.button} startIcon={<RemoveIcon />}>Delete</Button>
             </ul>
             <AddOrder
                 isOpen={addOrderOpen}
                 handleClose={handleAddOrderClose}
+                setResponseData={setResponseData}
+                responseData={responseData}
+            />
+            <DeleteOrder
+                isOpen={deleteOrderOpen}
+                handleClose={handleDeleteOrderClose}
+                setResponseData={setResponseData}
+                responseData={responseData}
+                deleteList={deleteList}
             />
         </Container>
     )

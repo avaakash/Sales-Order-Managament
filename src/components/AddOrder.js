@@ -7,7 +7,7 @@ import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
 
 export default function AddOrder(props) {
 
-    const {isOpen, handleClose} = props
+    const {isOpen, handleClose, setResponseData, responseData} = props
     const [added, setAdded] = React.useState(false);
     const [orderData, setOrderData] = React.useState({
         "customerName": "",
@@ -19,10 +19,6 @@ export default function AddOrder(props) {
         "salesOrderCurrency": "USD"
     })
     const form = React.useRef(null);
-    
-    const headers = {
-        "Content-Type": "application/json"
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -31,6 +27,8 @@ export default function AddOrder(props) {
         axios.post(URL, orderData)
             .then((res) => {
                 setAdded(true);
+                handleClose();
+                setResponseData([orderData, ...responseData])
             })
             .catch((error) => console.log(error)) 
     }
@@ -71,7 +69,7 @@ export default function AddOrder(props) {
             open={isOpen}
             onClose={handleClose}
             aria-labelledby="add-order"
-            aria-describedby="add-order-moda"
+            aria-describedby="add-order-modal"
         >
             {body}
         </Modal>

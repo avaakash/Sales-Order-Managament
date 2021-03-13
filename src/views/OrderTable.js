@@ -24,9 +24,7 @@ import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useSelector, useDispatch } from 'react-redux';
-import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';3
-import { connect } from 'react-redux';
+import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
 
 
 const useStyles = makeStyles({
@@ -63,24 +61,17 @@ function OrderTableHead(props) {
     )
 }
 
-export default function OrderTable() {
+export default function OrderTable(props) {
     const classes = useStyles();
 
     const URL = `${SERVER_URL}${ROLL_NUMBER}/ListSalesOrder`;
-    const dispatch = useDispatch();
 
-    const responseData = useSelector((state) => state.orderTable.responseData)
-    const hasNext = useSelector((state) => state.orderTable.hasNext)
-    const pageNumber = useSelector((state) => state.orderTable.pageNumber)
-    const selected = useSelector((state) => state.orderTable.selected)
-
-    const setPageNumber = () => dispatch({type:"table/nextPageNumber"});
-    const setHasNext = (value) => dispatch({type:"table/hasNext", payload:value});
-    const setResponseData = (data) => dispatch({type:"table/responseData", payload:data})
-    const setSelected = (newSelected) => dispatch({type:"table/selected", payload:newSelected})
+    const {responseData, setResponseData, selected, setSelected} = props
+    const [hasNext, setHasNext] = React.useState(false);
+    const [pageNumber, setPageNumber] = React.useState(0);
 
     const fetchData = () => {
-        setPageNumber();
+        setPageNumber(pageNumber + 1);
         axios
             .get(`${URL}?page=${pageNumber}&count=30`)
             .then((res) => {
@@ -104,7 +95,6 @@ export default function OrderTable() {
 
     const handleClick = (event, id) => {
         const selectedIndex = selected.indexOf(id);
-        console.log(selectedIndex);
         let newSelected = [];
 
         if (selectedIndex === -1) {
@@ -119,8 +109,8 @@ export default function OrderTable() {
                 selected.slice(selectedIndex + 1),
             );
         }
-        console.log(newSelected);
         setSelected(newSelected);
+        console.log(newSelected);
     };
 
     const fetchDataOnIntialLoad = React.useEffect(() => {
@@ -146,7 +136,7 @@ export default function OrderTable() {
                             loader={<p>Loading....</p>}
                         >
                             {responseData.map((data, index) => {
-                                const isItemSelected = isSelected(data.saleOrderID);
+                                const isItemSelected = isSelected(data.salesOrderID);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
@@ -169,8 +159,8 @@ export default function OrderTable() {
                                             {data.customerName}
                                         </TableCell>
                                         <TableCell>{data.customerNumber}</TableCell>
-                                        <TableCell align="right">{data.salesOrderID}</TableCell>
-                                        <TableCell align="right">{data.salesOrderAmount}</TableCell>
+                                        <TableCell align="right">{data.saleOrderID}</TableCell>
+                                        <TableCell align="right">{data.saleOrderAmount}</TableCell>
                                         <TableCell align="right">{data.dueDate}</TableCell>
                                         <TableCell align="right">{data.predictedPaymentDate}</TableCell>
                                         <TableCell align="right">{data.predictedAgingBucket}</TableCell>
