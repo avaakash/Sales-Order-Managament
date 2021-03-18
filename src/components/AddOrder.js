@@ -1,77 +1,85 @@
 import React from 'react';
-import Modal from '@material-ui/core/Modal';
-import { Button } from '@material-ui/core';
-import axios from 'axios';
-import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
+import { Button, ButtonGroup, Typography, } from '@material-ui/core';
+import { element, colors, text } from '../utils/styles';
+import { joinAll } from '../utils/helpers';
+import Form from './form/Form';
+import addOrder from '../services/addOrder';
+import { makeRequestData } from '../utils/helpers';
+import FormDialog from './form/FormDialog';
+import { add } from '../utils/formFields';
 
 
 export default function AddOrder(props) {
 
-    const {isOpen, handleClose, setResponseData, responseData} = props
-    const [added, setAdded] = React.useState(false);
-    const [orderData, setOrderData] = React.useState({
-        "customerName": "",
-        "customerNumber": "",
-        "salesOrderID": "",
-        "salesOrderAmount": "",
-        "dueDate": "",
-        "notes": "",
-        "salesOrderCurrency": "USD"
-    })
-    const form = React.useRef(null);
+    const elementStyles = element();
+    const textStyles = text();
+    const colorStyles = colors();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const URL = `${SERVER_URL}${ROLL_NUMBER}/CreateSalesOrder`;
-        const data = new FormData(form.current);
-        axios.post(URL, orderData)
+    const { isOpen, handleClose, setResponseData, responseData } = props;
+    const [formData, setFormData] = React.useState(makeRequestData(add));
+
+    const handleSubmit = () => {
+        addOrder(formData)
             .then((res) => {
-                setAdded(true);
+                console.log(res.data);
                 handleClose();
-                setResponseData([orderData, ...responseData])
+                setResponseData([res.data, ...responseData])
             })
-            .catch((error) => console.log(error)) 
+            .catch((error) => console.log(error))
     }
 
-    const handelChange = (e) => {
-        setOrderData({
-            ...orderData,
-            [e.target.name]: e.target.value
-        });
-    }
-
+    const title = 'Add Invoice';
     const body = (
-        <form ref={form} id="addOrderForm" onSubmit={handleSubmit}>
-            <label htmlFor="customerName">Customer Name</label>
-            <input id="customerName" onChange={handelChange} value={orderData.customerName} name="customerName" type="text" />
-
-            <label htmlFor="customerNumber">Customer No.</label>
-            <input id="customerNumber" onChange={handelChange} value={orderData.customerNumber} name="customerNumber" type="text" />
-
-            <label htmlFor="salesOrderID">Sales Order No.</label>
-            <input id="salesOrderID" onChange={handelChange} value={orderData.salesOrderID} name="salesOrderID" type="text" />
-
-            <label htmlFor="salesOrderAmount">Sales Order Amount</label>
-            <input id="salesOrderAmount" onChange={handelChange} value={orderData.salesOrderAmount} name="salesOrderAmount" type="text" />
-            
-            <label htmlFor="dueDate">Due Date</label>
-            <input id="dueDate" onChange={handelChange} value={orderData.dueDate} name="dueDate" type="date" />
-
-            <label htmlFor="notes">Notes</label>
-            <textarea id="notes" onChange={handelChange} value={orderData.notes} name="notes" type="text" />
-
-            <Button type="button" id="clear" >Clear</Button>    
-            <Button type="submit" id="submit" >Add</Button>    
+        <form id="addOrderForm" onSubmit={handleSubmit}>
+            <Form
+                fields={add}
+                formData={formData}
+                setFormData={setFormData}
+            />
         </form>
     )
+
+    const footer = (
+        <div>
+            <Button
+                type="button"
+                id="cancel"
+                onClick={handleClose}
+            >
+                <Typography className={joinAll(textStyles.buttonText, colorStyles.textBlue)}>
+                    Cancel
+                </Typography>
+            </Button>
+            <ButtonGroup>
+                <Button
+                    className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
+                    type="button"
+                    id="clear"
+                >
+                    <Typography className={textStyles.buttonText}>
+                        Clear
+                </Typography>
+                </Button>
+                <Button
+                    type="submit"
+                    className={joinAll(colorStyles.buttonActiveFilled, elementStyles.button)}
+                    id="submit"
+                    onClick={handleSubmit}
+                >
+                    <Typography className={textStyles.buttonText}>
+                        Add
+                </Typography>
+                </Button>
+            </ButtonGroup>
+        </div>
+    )
     return (
-        <Modal
-            open={isOpen}
-            onClose={handleClose}
-            aria-labelledby="add-order"
-            aria-describedby="add-order-modal"
-        >
-            {body}
-        </Modal>
+        <FormDialog
+            isOpen={isOpen}
+            handleClose={handleClose}
+            body={body}
+            footer={footer}
+            title={title}
+        />
     )
 }

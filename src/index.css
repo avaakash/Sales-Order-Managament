@@ -1,5 +1,12 @@
+@font-face {
+  font-family: 'Futura PT';
+  src: local('Futura PT'), url(./assets/fonts/futura-pt-extrabold.otf) format('otf');
+}
+
 body {
-  color: #58687E;
+  background-color: #58687E;
+  color: white !important;
+  overflow: hidden;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -11,4 +18,25 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+mark {
+  background-color: #2A5368;
+  color: white;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 0 #273D49CC; 
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #61707B; 
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #61707B; 
 }

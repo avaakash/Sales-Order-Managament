@@ -1,46 +1,70 @@
 import React from 'react';
-import Modal from '@material-ui/core/Modal';
-import { Button } from '@material-ui/core';
-import axios from 'axios';
-import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
+import deleteOrder from '../services/deleteOrder';
+import FormDialog from './form/FormDialog';
+import { element, colors, text } from '../utils/styles';
+import { Button, ButtonGroup, Typography, } from '@material-ui/core';
+import { joinAll } from '../utils/helpers';
 
 export default function DeleteOrder(props) {
 
-    const { isOpen, handleClose, deleteList, responseData, setResponseData } = props
+    const { isOpen, handleClose, selected, setSelected, responseData, setResponseData } = props
+
+    const elementStyles = element();
+    const textStyles = text();
+    const colorStyles = colors();
 
     const handleDelete = (e) => {
         e.preventDefault();
-        const URL = `${SERVER_URL}${ROLL_NUMBER}/DeleteSalesOrder`;
-        axios.post(URL, deleteList)
+        deleteOrder(selected)
             .then((res) => {
-                setResponseData(responseData.filter((el) => deleteList.indexOf(el.salesOrderID) < 0));
+                setResponseData(responseData.filter((el) => selected.indexOf(el.salesOrderID) < 0));
+                setSelected([]);
                 handleClose();
             })
             .catch((error) => console.log(error))
     }
 
+    const title = 'Delete Invoice(s)'
     const body = (
         <div>
-            <div>
-                <h2>Delete record(s)?</h2>
-                <p>You'll lose your record(s) after this action. We can't recover them once you delete</p>
-                <p>Are you sure you want to <span>permanently delete</span> them?</p>
-            </div>
-            <div>
-                <button id="close" onClick={handleClose}>Cancel</button>
-                <button id="delete" onClick={handleDelete}>Delete</button>
-            </div>
+            <h2>Delete record(s)?</h2>
+            <p>You'll lose your record(s) after this action. We can't recover them once you delete</p>
+            <p>Are you sure you want to <span>permanently delete</span> them?</p>
         </div>
     )
 
+    const footer = (
+        <ButtonGroup>
+            <Button
+                className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
+                type="button"
+                id="cancel"
+                onClick={handleClose}
+            >
+                <Typography className={textStyles.buttonText}>
+                    Cancel
+        </Typography>
+            </Button>
+            <Button
+                type="button"
+                className={joinAll(colorStyles.buttonActiveFilled, elementStyles.button)}
+                id="delete"
+                onClick={handleDelete}
+            >
+                <Typography className={textStyles.buttonText}>
+                    Delete
+        </Typography>
+            </Button>
+        </ButtonGroup>
+    )
+
     return (
-        <Modal
-            open={isOpen}
-            onClose={handleClose}
-            aria-labelledby="delete-order"
-            aria-describedby="delete-order-modal"
-        >
-            {body}
-        </Modal>
+        <FormDialog
+            isOpen={isOpen}
+            handleClose={handleClose}
+            body={body}
+            footer={footer}
+            title={title}
+        />
     )
 }
