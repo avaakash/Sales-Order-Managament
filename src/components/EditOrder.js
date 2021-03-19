@@ -7,7 +7,7 @@ import { edit } from '../utils/formFields';
 import { Button, ButtonGroup, Typography, } from '@material-ui/core';
 import Form from './form/Form';
 import { element, colors, text } from '../utils/styles';
-import { joinAll } from '../utils/helpers';
+import { joinAll, changeEditedRow } from '../utils/helpers';
 
 
 
@@ -24,20 +24,14 @@ export default function EditOrder(props) {
         editOrder(formData)
             .then((res) => {
                 console.log(formData)
-                setResponseData(changeEditedRow(responseData, formData));
+                setResponseData(changeEditedRow(responseData, formData, 'edit'));
                 setSelected([]);
                 handleClose();
             })
             .catch((error) => console.log(error))
     }
 
-    const changeEditedRow = (data, changeData) => {
-        let newData = data;
-        let foundIndex = newData.findIndex(obj => obj.salesOrderID === changeData.salesOrderID);
-        newData[foundIndex].salesOrderAmount = changeData.salesOrderAmount;
-        newData[foundIndex].notes = changeData.notes;
-        return newData;
-    }
+    
 
     const title = 'Edit Invoice'
     const body = (

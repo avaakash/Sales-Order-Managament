@@ -26,7 +26,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
 import { colors, element, text } from '../utils/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { joinAll } from '../utils/helpers';
+import { joinAll, getAgeingBucketString } from '../utils/helpers';
 
 
 const headCells = [
@@ -281,7 +281,8 @@ export default function TableData(props) {
                                             className={elementStyles.tableCell}
                                         >
                                             <Typography className={textStyles.tableCellText}>
-                                                {data.predictedAgingBucket ? data.predictedAgingBucket : "--"}
+                                                {data.predictedAgeingBucket ? 
+                                                    getAgeingBucketString(data.predictedAgeingBucket) : "--"}
                                             </Typography>
                                         </TableCell>
                                         

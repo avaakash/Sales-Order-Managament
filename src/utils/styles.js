@@ -68,6 +68,11 @@ const text = makeStyles({
         letterSpacing: '0px',
         color: '#97A1A9'
     },
+    muteText: {
+        color: '#C0C6CA',
+        fontSize: '15px',
+        fontFamily: 'Ubuntu'
+    }
 })
 
 const element = makeStyles({

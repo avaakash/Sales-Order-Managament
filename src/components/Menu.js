@@ -12,14 +12,18 @@ import DeleteOrder from './DeleteOrder';
 import EditOrder from './EditOrder';
 import SearchBar from './SearchBar';
 import { colors, text, element } from '../utils/styles';
-import { joinAll } from '../utils/helpers';
+import { joinAll, getDataFromID, changeEditedRow } from '../utils/helpers';
 import Typography from '@material-ui/core/Typography';
+import CorrespondenceTemplate from './Correspondence';
+import { predictDates, updatePredictedData } from '../services/predict';
+
 
 export default function Menu(props) {
 
     const [addOpen, setAddOpen] = React.useState(false);
     const [editOpen, setEditOpen] = React.useState(false);
     const [deleteOpen, setDeleteOpen] = React.useState(false);
+    const [correspondenceOpen, setCorrespondenceOpen] = React.useState(false);
 
     const colorStyles = colors();
     const textStyles = text();
@@ -35,7 +39,6 @@ export default function Menu(props) {
         setAddOpen(false);
     }
 
-    
     const handleEditClose = () => {
         setSelected([]);
         setEditOpen(false);
@@ -44,6 +47,28 @@ export default function Menu(props) {
     const handleDeleteClose = () => {
         setSelected([]);
         setDeleteOpen(false);
+    }
+
+    const handleCorrespondenceClose = () => {
+        setCorrespondenceOpen(false);
+    }
+
+    const handlePredict = () => {
+        predictDates(getDataFromID(selected, responseData))
+            .then((res) => {
+                console.log(res.data)
+                for(const order of res.data) {
+                    changeEditedRow(responseData, order, 'predict');
+                };
+            })
+            .then((res) => {
+                updatePredictedData(getDataFromID(selected, responseData))
+                    .then((res) => {
+                        setSelected([]);
+                    })
+                    .catch((error) => console.log(error))
+            })
+            .catch((error) => console.log(error))
     }
     
     return (
@@ -54,6 +79,7 @@ export default function Menu(props) {
                     className={joinAll(elementStyles.button, colorStyles.buttonActiveFilled)}
                     variant='contained'
                     disabled={selected.length < 1}
+                    onClick={handlePredict}
                 >
                     <Typography className={textStyles.buttonText}>
                         Predict
@@ -62,6 +88,7 @@ export default function Menu(props) {
                 <Button
                     variant='outlined'
                     className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
+                    onClick={() => setCorrespondenceOpen(true)}
                     disabled={selected.length < 1}
                     size='small'
                 >
@@ -130,6 +157,11 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
+            />
+            <CorrespondenceTemplate
+                isOpen={correspondenceOpen}
+                handleClose={handleCorrespondenceClose}
+                orders={getDataFromID(selected, responseData)}
             />
         </Grid>
     )
