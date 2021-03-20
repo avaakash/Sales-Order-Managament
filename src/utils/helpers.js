@@ -20,8 +20,8 @@ const getDataFromID = (selected, data) => {
     return orders;
 }
 
-const converToThousands = (amount) => {
-    return `${amount/1000}K`;
+const convertToThousands = (amount) => {
+    return `${Math.round(amount/100)/10}K`;
 }
 
 const changeEditedRow = (data, changeData, type) => {
@@ -52,4 +52,4 @@ const getAgeingBucketString = (x) => {
     }
 }
 
-export { joinAll, makeRequestData, getDataFromID, converToThousands, changeEditedRow, getAgeingBucketString }
+export { joinAll, makeRequestData, getDataFromID, convertToThousands, changeEditedRow, getAgeingBucketString }

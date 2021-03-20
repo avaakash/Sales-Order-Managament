@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { colors, text, element } from '../utils/styles';
 import { TableBody, Typography, Button, ButtonGroup, Paper } from '@material-ui/core';
-import { joinAll, converToThousands } from '../utils/helpers';
+import { joinAll, convertToThousands } from '../utils/helpers';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -26,20 +26,21 @@ export default function CorrespondenceTemplate(props) {
     const title = `View Correspondence (${orders.length})`
 
     const getSelectedRows = () => {
-        const cols = ['Invoice Number', 'PO Number', 'Invoice Date', 'Due Date', 'Currency', 'Open Amount($)'];
-        const rows = [orders]
-            // orders.map((order) => {
-            //     return [
-            //         order.salesOrderID,
-            //         order.salesOrderID,
-            //         order.salesOrderDate,
-            //         order.dueDate,
-            //         order.salesOrderCurrency,
-            //         converToThousands(order.openAmount)
-            //     ]
-            // })
-        // ]
-        console.log(rows);
+        const cols = [[
+            'Invoice Number', 'PO Number', 'Invoice Date', 'Due Date', 'Currency', 'Open Amount($)'
+        ]];
+        const rows = 
+            orders.map((order) => {
+                return [
+                    order.salesOrderID,
+                    order.salesOrderID,
+                    order.salesOrderDate,
+                    order.dueDate,
+                    order.salesOrderCurrency ? order.salesOrderCurrency : 'USD',
+                    convertToThousands(order.openAmount)
+                ]
+            })
+        console.log(rows[0]);
         return {
             cols,
             rows
@@ -48,19 +49,32 @@ export default function CorrespondenceTemplate(props) {
 
     const handleDownload = (e) => {
         e.preventDefault();
-        const doc = new jsPDF();
-        const {rows, cols} = getSelectedRows();
-        autoTable(doc, {
-            columns: cols,
-            body: rows
+        const doc = new jsPDF({
+            orientation: "landscape",
         });
+        
+        const {rows, cols} = getSelectedRows();
+        doc.text(10, 10, `Invoice Details\n\n
+    Dear Sir/Madam,
+    Gentle reminder that you have one or more open invoices on your account.
+    Please get back to us with an expected date of payment. If you have any specific issue with the
+    invoice(s), please let us know so that we can address it at the earliest.\n
+    Please find the details of the invoices below:`)
+        doc.autoTable({
+            head: cols,
+            body: rows,
+            startY: 65
+        });
+        let finalY = doc.lastAutoTable.finalY + 10; // The y position on the page
+        doc.text(10, finalY, `Total Amount to be paid: \$${getTotal()}\n In case you have already made a payment for the above items, please send us the details to ensure \nthe payment is posted. Let us know if we can be of any further assistance. Looking forward to hearing from you.
+    \n\nKind Regards,[First Name][Last Name]`)
         window.open(doc.output('bloburl'), '_blank');
     };
 
     const getTotal = () => {
-        let total = 0;
+        var total = 0;
         orders.map((order) => total += order.openAmount)
-        return converToThousands(total);
+        return convertToThousands(total);
     }
 
     return (
@@ -110,12 +124,15 @@ export default function CorrespondenceTemplate(props) {
                                             <TableCell>{order.salesOrderDate}</TableCell>
                                             <TableCell>{order.dueDate}</TableCell>
                                             <TableCell>{order.salesOrderCurrency ? order.salesOrderCurrency : 'USD'}</TableCell>
-                                            <TableCell>{converToThousands(order.openAmount)}</TableCell>
+                                            <TableCell>{convertToThousands(order.openAmount)}</TableCell>
                                         </TableRow>
                                     )
                                 })}
                             </TableBody>
                         </Table>
+                        <Typography>
+                            Total Amount to be paid: <span style={{color:'white'}}>{`\$${getTotal()}`}</span>
+                        </Typography>
                         <Typography>
                             In case you have already made a payment for the above items, please send us the details
                         to ensure the paymeny is posted <br />
