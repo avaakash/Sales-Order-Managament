@@ -7,7 +7,10 @@ import { joinAll } from '../utils/helpers';
 
 export default function DeleteOrder(props) {
 
-    const { isOpen, handleClose, selected, setSelected, responseData, setResponseData } = props
+    const { 
+        isOpen, handleClose, selected, setSelected, responseData, 
+        setResponseData, setErrorMessage, showErrorBar 
+    } = props
 
     const elementStyles = element();
     const textStyles = text();
@@ -21,7 +24,10 @@ export default function DeleteOrder(props) {
                 setSelected([]);
                 handleClose();
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                setErrorMessage(error)
+                showErrorBar();
+            })
     }
 
     const title = 'Delete Invoice(s)'

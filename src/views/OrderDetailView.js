@@ -1,16 +1,19 @@
 import Grid from '@material-ui/core/Grid';
 import TableData from '../components/TableData';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = {
-
-}
 export default function OrderDetailView(props) {
 
     const { 
         responseData, setResponseData, selected, 
-        setSelected, searchActive, searchData, searchQuery
+        setSelected, searchActive, searchData, searchQuery,
+        setSearchQuery
     } = props
+
+    const clearSearch = () => {
+        console.log('Clear');
+        setSearchQuery("");
+      }
+    
 
     return (
         <Grid>
@@ -21,6 +24,7 @@ export default function OrderDetailView(props) {
                 selected={selected}
                 setSelected={setSelected}
                 searchQuery={searchQuery}
+                clearSearch={clearSearch}
             />
         </Grid>
     )

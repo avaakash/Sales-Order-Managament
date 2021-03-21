@@ -4,10 +4,10 @@ import { element, colors, text } from '../utils/styles';
 import { joinAll } from '../utils/helpers';
 import Form from './form/Form';
 import addOrder from '../services/addOrder';
-import { makeRequestData } from '../utils/helpers';
+import { makeRequestData, clearFormData } from '../utils/helpers';
 import FormDialog from './form/FormDialog';
 import { add } from '../utils/formFields';
-
+import { emptyValidator } from '../utils/errors';
 
 export default function AddOrder(props) {
 
@@ -15,17 +15,35 @@ export default function AddOrder(props) {
     const textStyles = text();
     const colorStyles = colors();
 
-    const { isOpen, handleClose, setResponseData, responseData } = props;
+    const { 
+        isOpen, handleClose, setResponseData, responseData, setErrorMessage,
+        showErrorBar
+    } = props;
+
     const [formData, setFormData] = React.useState(makeRequestData(add));
+    const [error, setError] = React.useState(() => {
+        let errorFields = {}
+        add.map((field) => {
+            errorFields[field.fieldName] = null
+        })
+        return errorFields;
+    })
+
 
     const handleSubmit = () => {
-        addOrder(formData)
+        if (emptyValidator(formData, setError, error)) {
+            addOrder(formData)
             .then((res) => {
-                console.log(res.data);
                 handleClose();
                 setResponseData([res.data, ...responseData])
             })
-            .catch((error) => console.log(error))
+            .catch((error) => {
+                setErrorMessage(error)
+                showErrorBar();
+            })
+        } else {
+            showErrorBar();
+        }
     }
 
     const title = 'Add Invoice';
@@ -35,6 +53,8 @@ export default function AddOrder(props) {
                 fields={add}
                 formData={formData}
                 setFormData={setFormData}
+                error={error}
+                setError={setError}
             />
         </form>
     )
@@ -55,6 +75,7 @@ export default function AddOrder(props) {
                     className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
                     type="button"
                     id="clear"
+                    onClick={() => clearFormData(formData, setFormData)}
                 >
                     <Typography className={textStyles.buttonText}>
                         Clear

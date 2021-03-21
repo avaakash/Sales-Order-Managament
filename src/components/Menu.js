@@ -16,6 +16,7 @@ import { joinAll, getDataFromID, changeEditedRow } from '../utils/helpers';
 import Typography from '@material-ui/core/Typography';
 import CorrespondenceTemplate from './Correspondence';
 import { predictDates, updatePredictedData } from '../services/predict';
+import ErrorBar from './ErrorBar';
 
 
 export default function Menu(props) {
@@ -24,14 +25,16 @@ export default function Menu(props) {
     const [editOpen, setEditOpen] = React.useState(false);
     const [deleteOpen, setDeleteOpen] = React.useState(false);
     const [correspondenceOpen, setCorrespondenceOpen] = React.useState(false);
+    const [isErrorBarOpen, setErrorBarOpen] = React.useState(false);
 
     const colorStyles = colors();
     const textStyles = text();
     const elementStyles = element();
 
-    const { 
-        setResponseData, responseData, selected, setSelected, 
-        setSearchData, setSearchActive, setSearchQuery
+    const {
+        setResponseData, responseData, selected, setSelected,
+        setSearchData, setSearchActive, setSearchQuery, setErrorMessage,
+        showErrorBar, clearSearch
     } = props;
 
     const handleAddClose = () => {
@@ -43,7 +46,7 @@ export default function Menu(props) {
         setSelected([]);
         setEditOpen(false);
     }
-    
+
     const handleDeleteClose = () => {
         setSelected([]);
         setDeleteOpen(false);
@@ -53,11 +56,18 @@ export default function Menu(props) {
         setCorrespondenceOpen(false);
     }
 
+    const handleErrorBarClose = () => {
+        setErrorBarOpen(false);
+    }
+
+    const showError = () => {
+        setErrorBarOpen(true);
+    }
+
     const handlePredict = () => {
         predictDates(getDataFromID(selected, responseData))
             .then((res) => {
-                console.log(res.data)
-                for(const order of res.data) {
+                for (const order of res.data) {
                     changeEditedRow(responseData, order, 'predict');
                 };
             })
@@ -70,70 +80,70 @@ export default function Menu(props) {
             })
             .catch((error) => console.log(error))
     }
-    
+
     return (
         <Grid container>
-            <ul style={{display:'flex'}}>
-                <div style={{float:'left'}}>
-                <Button
-                    className={joinAll(elementStyles.button, colorStyles.buttonActiveFilled)}
-                    variant='contained'
-                    disabled={selected.length < 1}
-                    onClick={handlePredict}
-                >
-                    <Typography className={textStyles.buttonText}>
-                        Predict
+            <ul style={{ display: 'flex' }}>
+                <div style={{ float: 'left' }}>
+                    <Button
+                        className={joinAll(elementStyles.button, colorStyles.buttonActiveFilled)}
+                        variant='contained'
+                        disabled={selected.length < 1}
+                        onClick={handlePredict}
+                    >
+                        <Typography className={textStyles.buttonText}>
+                            Predict
                     </Typography>
-                </Button>
-                <Button
-                    variant='outlined'
-                    className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
-                    onClick={() => setCorrespondenceOpen(true)}
-                    disabled={selected.length < 1}
-                    size='small'
-                >
-                    <Typography className={textStyles.buttonText}>
-                        View Correspondence
+                    </Button>
+                    <Button
+                        variant='outlined'
+                        className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
+                        onClick={() => setCorrespondenceOpen(true)}
+                        disabled={selected.length < 1}
+                        size='small'
+                    >
+                        <Typography className={textStyles.buttonText}>
+                            View Correspondence
                     </Typography>
-                </Button>
+                    </Button>
                 </div>
-                <div style={{float:'right'}}>
-                <Button variant='outlined'
-                    className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
-                    onClick={() => setAddOpen(true)}
-                    startIcon={<AddIcon />}
-                    disabled={selected.length > 0}
-                    size='small'
-                >
-                    <Typography className={textStyles.buttonText}>
-                        Adit
+                <div style={{ float: 'right' }}>
+                    <Button variant='outlined'
+                        className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
+                        onClick={() => setAddOpen(true)}
+                        startIcon={<AddIcon />}
+                        disabled={selected.length > 0}
+                        size='small'
+                    >
+                        <Typography className={textStyles.buttonText}>
+                            Adit
                     </Typography>
-                </Button>
-                <Button variant='outlined'
-                    className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
-                    onClick={() => setEditOpen(true)}
-                    startIcon={<EditIcon />}
-                    disabled={selected.length !== 1}
-                >
-                    <Typography className={textStyles.buttonText}>
-                        Edit
+                    </Button>
+                    <Button variant='outlined'
+                        className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
+                        onClick={() => setEditOpen(true)}
+                        startIcon={<EditIcon />}
+                        disabled={selected.length !== 1}
+                    >
+                        <Typography className={textStyles.buttonText}>
+                            Edit
                     </Typography>
-                </Button>
-                <Button variant='outlined'
-                    className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
-                    onClick={() => setDeleteOpen(true)}
-                    startIcon={<RemoveIcon />}
-                    disabled={selected.length < 1}
-                >
-                    <Typography className={textStyles.buttonText}>
-                        Delete
+                    </Button>
+                    <Button variant='outlined'
+                        className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
+                        onClick={() => setDeleteOpen(true)}
+                        startIcon={<RemoveIcon />}
+                        disabled={selected.length < 1}
+                    >
+                        <Typography className={textStyles.buttonText}>
+                            Delete
                     </Typography>
-                </Button>
-                <SearchBar
-                    setSearchActive={setSearchActive}
-                    setSearchData={setSearchData}
-                    setSearchQuery={setSearchQuery}
-                />
+                    </Button>
+                    <SearchBar
+                        setSearchActive={setSearchActive}
+                        setSearchData={setSearchData}
+                        setSearchQuery={setSearchQuery}
+                    />
                 </div>
             </ul>
             <AddOrder
@@ -141,6 +151,8 @@ export default function Menu(props) {
                 handleClose={handleAddClose}
                 setResponseData={setResponseData}
                 responseData={responseData}
+                setErrorMessage={setErrorMessage}
+                showErrorBar={showError}
             />
             <EditOrder
                 isOpen={editOpen}
@@ -149,6 +161,8 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
+                setErrorMessage={setErrorMessage}
+                showErrorBar={showErrorBar}
             />
             <DeleteOrder
                 isOpen={deleteOpen}
@@ -157,11 +171,17 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
+                setErrorMessage={setErrorMessage}
+                showErrorBar={showErrorBar}
             />
             <CorrespondenceTemplate
                 isOpen={correspondenceOpen}
                 handleClose={handleCorrespondenceClose}
                 orders={getDataFromID(selected, responseData)}
+            />
+            <ErrorBar
+                open={isErrorBarOpen}
+                handleClose={handleErrorBarClose}
             />
         </Grid>
     )

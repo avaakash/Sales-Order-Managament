@@ -15,6 +15,7 @@ export default function Field(props) {
                 value={value[field.fieldName]}
                 onChange={handleChange}
                 label={field.label}
+                error={error}
                 multiline
             />
             case 'date': return <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -41,6 +42,7 @@ export default function Field(props) {
                 value={value[field.fieldName]}
                 onChange={handleChange}
                 label={field.label}
+                error={error}
             />
         }
     }

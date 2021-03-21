@@ -40,7 +40,6 @@ export default function CorrespondenceTemplate(props) {
                     convertToThousands(order.openAmount)
                 ]
             })
-        console.log(rows[0]);
         return {
             cols,
             rows
@@ -114,7 +113,6 @@ export default function CorrespondenceTemplate(props) {
                             </TableHead>
                             <TableBody>
                                 {orders.map((order, index) => {
-                                    console.log(order.salesOrderID, index);
                                     return (
                                         <TableRow
                                             key={order.salesOrderID}

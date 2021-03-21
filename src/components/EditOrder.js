@@ -1,37 +1,60 @@
 import React from 'react';
-import axios from 'axios';
 import editOrder from '../services/editOrder';
-import { makeRequestData } from '../utils/helpers';
 import FormDialog from './form/FormDialog';
 import { edit } from '../utils/formFields';
 import { Button, ButtonGroup, Typography, } from '@material-ui/core';
 import Form from './form/Form';
 import { element, colors, text } from '../utils/styles';
-import { joinAll, changeEditedRow } from '../utils/helpers';
+import { joinAll, changeEditedRow, getDataFromID, makeRequestData } from '../utils/helpers';
+import { emptyValidator } from '../utils/errors';
 
 
 
 export default function EditOrder(props) {
     
-    const { isOpen, handleClose, setResponseData, responseData, selected, setSelected } = props
-    const [formData, setFormData] = React.useState(makeRequestData(edit, 'salesOrderID', selected[0]));
+    const { 
+        isOpen, handleClose, setResponseData, responseData, selected, 
+        setSelected, setErrorMessage, showErrorBar 
+    } = props
+    const [formData, setFormData] = React.useState(makeRequestData(edit));
+    const [error, setError] = React.useState(() => {
+        let errorFields = {}
+        edit.map((field) => {
+            errorFields[field.fieldName] = null
+        })
+        return errorFields;
+    })
+
     const elementStyles = element();
     const textStyles = text();
     const colorStyles = colors();
 
+    React.useEffect(() => {
+        if(isOpen === true && selected.length > 0) {
+            setFormData(makeRequestData(edit, getDataFromID(selected[0], responseData)))
+        }}, 
+        [isOpen]
+    );
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        editOrder(formData)
+        if (emptyValidator(formData, setError, error)) {
+            editOrder(formData)
             .then((res) => {
-                console.log(formData)
                 setResponseData(changeEditedRow(responseData, formData, 'edit'));
                 setSelected([]);
                 handleClose();
             })
-            .catch((error) => console.log(error))
-    }
-
-    
+            .catch((error) => {
+                setErrorMessage(error)
+                showErrorBar();
+            })
+        } else {
+            setErrorMessage(error)
+            showErrorBar();
+        }
+        
+    }  
 
     const title = 'Edit Invoice'
     const body = (
@@ -40,6 +63,7 @@ export default function EditOrder(props) {
                 fields={edit}
                 formData={formData}
                 setFormData={setFormData}
+                error={error}
             />
         </form>
     )

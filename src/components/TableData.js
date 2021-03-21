@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import { lighten, makeStyles, withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -14,11 +12,6 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { StyledCheckbox } from './Checkbox';
 import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -27,7 +20,7 @@ import { SERVER_URL, ROLL_NUMBER } from '../utils/constants';
 import { colors, element, text } from '../utils/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { joinAll, getAgeingBucketString } from '../utils/helpers';
-
+import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 
 const headCells = [
     { id: 'customerName', numeric: false, disablePadding: true, label: 'Customer Name' },
@@ -85,10 +78,14 @@ export default function TableData(props) {
 
     const URL = `${SERVER_URL}${ROLL_NUMBER}/ListSalesOrder`;
 
-    const { responseData, setResponseData, selected, setSelected, searchActive, searchQuery } = props
+    const { 
+        responseData, setResponseData, selected, setSelected, 
+        searchActive, searchQuery, clearSearch 
+    } = props
+    
     const [hasNext, setHasNext] = React.useState(!searchActive);
     const [pageNumber, setPageNumber] = React.useState(0);
-    console.log(responseData);
+
     const fetchData = () => {
         setPageNumber(pageNumber + 1);
         axios
@@ -129,7 +126,6 @@ export default function TableData(props) {
             );
         }
         setSelected(newSelected);
-        console.log(newSelected);
     };
 
     const fetchDataOnIntialLoad = React.useEffect(() => {
@@ -141,7 +137,6 @@ export default function TableData(props) {
     const highlightSearchedText = (text) => {
         if(searchActive) {
             let newText = text.replace(new RegExp(searchQuery, "gi"), (match) => `<mark>${match}</mark>`);
-            console.log(newText);
             return {__html: newText};
         } else {
             return text;
@@ -157,151 +152,165 @@ export default function TableData(props) {
     }
     return (
         <Container>
-            <TableContainer
-                id="tableScrollable"
-                style={{
-                    overflowY: 'scroll',
-                    maxHeight: "66vh",
-                }}
-            >
-                <InfiniteScroll
-                    dataLength={responseData.length}
-                    next={fetchData}
-                    hasMore={hasNext}
-                    scrollableTarget="tableScrollable"
-                    loader={
-                        <div
-                            style={{
-                                width:"100px",
-                                height:"100px",
-                                margin:'auto',
-                                padding:'50px'
-                            }}>
-                            <CircularProgress color="secondary" />
-                        </div>
-                    }
+            { responseData.length > 0 ? 
+                <TableContainer
+                    id="tableScrollable"
+                    style={{
+                        overflowY: 'scroll',
+                        maxHeight: "66vh",
+                    }}
                 >
-                    <Table
-                        aria-label="Orders Table"
-                        size='small'
+                    <InfiniteScroll
+                        dataLength={responseData.length}
+                        next={fetchData}
+                        hasMore={hasNext}
+                        scrollableTarget="tableScrollable"
+                        loader={
+                            <div
+                                style={{
+                                    width:"100px",
+                                    height:"100px",
+                                    margin:'auto',
+                                    padding:'50px'
+                                }}>
+                                <CircularProgress color="secondary" />
+                            </div>
+                        }
                     >
-                        <CustomTableHead
-                            numSelected={selected.length}
-                            rowCount={responseData.length}
-                            onSelectAllClick={handleSelectAllClick}
-                            
-                        />
-                        <TableBody>
-                            {responseData.map((data, index) => {
-                                const isItemSelected = isSelected(data.salesOrderID);
-                                const orderNumber = highlightSearchedText(data.salesOrderID);
-                                const labelId = `enhanced-table-checkbox-${index}`;
+                        <Table
+                            aria-label="Orders Table"
+                            size='small'
+                        >
+                            <CustomTableHead
+                                numSelected={selected.length}
+                                rowCount={responseData.length}
+                                onSelectAllClick={handleSelectAllClick}
+                                
+                            />
+                            <TableBody>
+                                {responseData.map((data, index) => {
+                                    const isItemSelected = isSelected(data.salesOrderID);
+                                    const orderNumber = highlightSearchedText(data.salesOrderID);
+                                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                                return (
-                                    <TableRow
-                                        key={data.salesOrderID}
-                                        hover
-                                        onClick={(event) => handleClick(event, data.salesOrderID)}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        selected={isItemSelected}
-                                        classes={{
-                                            selected: colorStyles.selected,
-                                        }}
-                                        className={colorStyles.tableRow}
-                                    >
-                                        <TableCell 
-                                            padding="checkbox"
-                                            className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerLeft)}
+                                    return (
+                                        <TableRow
+                                            key={data.salesOrderID}
+                                            hover
+                                            onClick={(event) => handleClick(event, data.salesOrderID)}
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            selected={isItemSelected}
+                                            classes={{
+                                                selected: colorStyles.selected,
+                                            }}
+                                            className={colorStyles.tableRow}
                                         >
-                                            <StyledCheckbox
-                                                checked={isItemSelected}
-                                                inputProps={{ 'aria-labelledby': labelId }}
-                                            />
-                                        </TableCell>
-                                        <TableCell 
-                                            scope="row"
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.customerName}
-                                            </Typography>
-                                        </TableCell>
+                                            <TableCell 
+                                                padding="checkbox"
+                                                className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerLeft)}
+                                            >
+                                                <StyledCheckbox
+                                                    checked={isItemSelected}
+                                                    inputProps={{ 'aria-labelledby': labelId }}
+                                                />
+                                            </TableCell>
+                                            <TableCell 
+                                                scope="row"
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.customerName}
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell 
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.customerNumber}
-                                            </Typography>
-                                        </TableCell>
+                                            <TableCell 
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.customerNumber}
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell 
-                                            align="right" 
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {searchActive ? <p dangerouslySetInnerHTML={orderNumber} /> : orderNumber }
-                                            </Typography>
-                                        </TableCell>
+                                            <TableCell 
+                                                align="right" 
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {searchActive ? <p dangerouslySetInnerHTML={orderNumber} /> : orderNumber }
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell 
-                                            align="right" 
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.salesOrderAmount}
-                                            </Typography>
-                                        </TableCell>
+                                            <TableCell 
+                                                align="right" 
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.salesOrderAmount}
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell 
-                                            align="right"
-                                            className={
-                                                isPassDueDate(data.dueDate) ? 
-                                                    joinAll(colorStyles.textRed,elementStyles.tableCell) : elementStyles.tableCell
-                                            } 
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.dueDate}
-                                            </Typography>
-                                        </TableCell>
+                                            <TableCell 
+                                                align="right"
+                                                className={
+                                                    isPassDueDate(data.dueDate) ? 
+                                                        joinAll(colorStyles.textRed,elementStyles.tableCell) : elementStyles.tableCell
+                                                } 
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.dueDate}
+                                                </Typography>
+                                            </TableCell>
 
-                                        <TableCell 
-                                            align="right"
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.predictedPaymentDate ? data.predictedPaymentDate : "--"}
-                                            </Typography>
-                                        </TableCell>
-                                        
-                                        <TableCell 
-                                            align="right"
-                                            className={elementStyles.tableCell}
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                {data.predictedAgeingBucket ? 
-                                                    getAgeingBucketString(data.predictedAgeingBucket) : "--"}
-                                            </Typography>
-                                        </TableCell>
-                                        
-                                        <TableCell 
-                                            align="right"
-                                            className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerRight)}
+                                            <TableCell 
+                                                align="right"
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.predictedPaymentDate ? data.predictedPaymentDate : "--"}
+                                                </Typography>
+                                            </TableCell>
+                                            
+                                            <TableCell 
+                                                align="right"
+                                                className={elementStyles.tableCell}
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    {data.predictedAgeingBucket ? 
+                                                        getAgeingBucketString(data.predictedAgeingBucket) : "--"}
+                                                </Typography>
+                                            </TableCell>
+                                            
+                                            <TableCell 
+                                                align="right"
+                                                className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerRight)}
 
-                                        >
-                                            <Typography className={textStyles.tableCellText}>
-                                                { data.notes ? data.notes : '--'}
-                                            </Typography>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </InfiniteScroll>
-            </TableContainer>
+                                            >
+                                                <Typography className={textStyles.tableCellText}>
+                                                    { data.notes ? data.notes : '--'}
+                                                </Typography>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                        </Table>
+                    </InfiniteScroll>
+                </TableContainer>
+                :
+                <Grid>
+                    <ErrorOutlineOutlinedIcon />
+                    <Typography>
+                        No results found
+                    </Typography>
+                    <Typography>
+                        Tru adjusting search to find what you are looking for.
+                    </Typography>
+                    <Button onClick={clearSearch}>Clear Search</Button>
+                </Grid>
+                
+            }
         </Container>
     );
 }

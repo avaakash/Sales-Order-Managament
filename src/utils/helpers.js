@@ -2,21 +2,23 @@ const joinAll = (...classes) => {
     return classes.join(" ")
 }
 
-const makeRequestData = (formData, idField, idValue) => {
+const makeRequestData = (formData, oldData) => {
     let data = {}
-    formData.map((field) => {
-        if(field === idField) {
-            data[idField] = idValue;
-        } else {
+    if (oldData == null) {
+        formData.map((field) => {
             data[field.fieldName] = field.value;
-        }
-    })
+        })
+    } else {
+        oldData = oldData[0];
+        formData.map((field) => {
+            data[field.fieldName] = oldData[field.fieldName];
+        });
+    }
     return data;
 }
 
 const getDataFromID = (selected, data) => {
     let orders = data.filter((el) => selected.includes(el.salesOrderID))
-    console.log(orders);
     return orders;
 }
 
@@ -26,9 +28,7 @@ const convertToThousands = (amount) => {
 
 const changeEditedRow = (data, changeData, type) => {
     let newData = data;
-    console.log(changeData)
     let foundIndex = newData.findIndex(obj => obj.salesDocID === changeData.salesDocID);
-    console.log(foundIndex);
     if (type === 'edit') {
         newData[foundIndex].salesOrderAmount = changeData.salesOrderAmount;
         newData[foundIndex].notes = changeData.notes;
@@ -52,4 +52,21 @@ const getAgeingBucketString = (x) => {
     }
 }
 
-export { joinAll, makeRequestData, getDataFromID, convertToThousands, changeEditedRow, getAgeingBucketString }
+const clearFormData = (data, setData) => {
+    console.log('clear data');
+    let newData = {};
+    for(let key in data) {
+        if(key == 'dueDate') {
+            newData[key] = null;
+        } else {
+            newData[key] = "";
+        }
+    }
+    console.log(newData);
+    setData(newData);
+}
+
+export { 
+    joinAll, makeRequestData, getDataFromID, convertToThousands, changeEditedRow, 
+    getAgeingBucketString, clearFormData 
+}

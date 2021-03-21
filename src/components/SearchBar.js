@@ -35,7 +35,6 @@ export default function SearchBar(props) {
       };
 
     const fetchSearchData = (query) => {
-        console.log("Called");
         axios.get(URL + "query=" + query)
             .then((res) => setSearchData(res.data))
             .catch((error) => console.log(error))
