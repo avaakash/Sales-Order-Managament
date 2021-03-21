@@ -16,9 +16,9 @@ export default function AddOrder(props) {
     const colorStyles = colors();
 
     const { 
-        isOpen, handleClose, setResponseData, responseData, setErrorMessage,
-        showErrorBar
+        isOpen, handleClose, setResponseData, responseData, showErrorBar
     } = props;
+
 
     const [formData, setFormData] = React.useState(makeRequestData(add));
     const [error, setError] = React.useState(() => {
@@ -38,7 +38,6 @@ export default function AddOrder(props) {
                 setResponseData([res.data, ...responseData])
             })
             .catch((error) => {
-                setErrorMessage(error)
                 showErrorBar();
             })
         } else {

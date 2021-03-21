@@ -33,7 +33,7 @@ export default function Menu(props) {
 
     const {
         setResponseData, responseData, selected, setSelected,
-        setSearchData, setSearchActive, setSearchQuery, setErrorMessage,
+        setSearchData, setSearchActive, setSearchQuery,
         showErrorBar, clearSearch
     } = props;
 
@@ -82,9 +82,22 @@ export default function Menu(props) {
     }
 
     return (
-        <Grid container>
-            <ul style={{ display: 'flex' }}>
-                <div style={{ float: 'left' }}>
+        <Grid 
+            container
+            style={{marginTop:"30px"}}
+        >
+            <Grid
+                container
+                spacing={2}
+                direction="row"
+                justify="flex-start"
+                alignItems="baseline"
+                xs={6}
+            >
+                <Grid
+                    item
+                    style={{marginLeft:"2rem"}}
+                >
                     <Button
                         className={joinAll(elementStyles.button, colorStyles.buttonActiveFilled)}
                         variant='contained'
@@ -95,6 +108,11 @@ export default function Menu(props) {
                             Predict
                     </Typography>
                     </Button>
+                </Grid>
+
+                <Grid
+                    item
+                >
                     <Button
                         variant='outlined'
                         className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
@@ -106,8 +124,20 @@ export default function Menu(props) {
                             View Correspondence
                     </Typography>
                     </Button>
-                </div>
-                <div style={{ float: 'right' }}>
+                </Grid>
+            </Grid>
+            <Grid
+                container
+                spacing={2}
+                direction="row"
+                justify="flex-end"
+                alignItems="flex-start"
+                xs={6}
+                
+            >
+                <Grid
+                    item
+                >
                     <Button variant='outlined'
                         className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
                         onClick={() => setAddOpen(true)}
@@ -119,6 +149,11 @@ export default function Menu(props) {
                             Adit
                     </Typography>
                     </Button>
+                </Grid>
+
+                <Grid
+                    item
+                >
                     <Button variant='outlined'
                         className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
                         onClick={() => setEditOpen(true)}
@@ -129,6 +164,11 @@ export default function Menu(props) {
                             Edit
                     </Typography>
                     </Button>
+                </Grid>
+
+                <Grid
+                    item
+                >
                     <Button variant='outlined'
                         className={joinAll(elementStyles.button, colorStyles.buttonActiveOutline)}
                         onClick={() => setDeleteOpen(true)}
@@ -139,19 +179,23 @@ export default function Menu(props) {
                             Delete
                     </Typography>
                     </Button>
+                </Grid>
+
+                <Grid
+                    item
+                >
                     <SearchBar
                         setSearchActive={setSearchActive}
                         setSearchData={setSearchData}
                         setSearchQuery={setSearchQuery}
                     />
-                </div>
-            </ul>
+                </Grid>
+            </Grid>
             <AddOrder
                 isOpen={addOpen}
                 handleClose={handleAddClose}
                 setResponseData={setResponseData}
                 responseData={responseData}
-                setErrorMessage={setErrorMessage}
                 showErrorBar={showError}
             />
             <EditOrder
@@ -161,7 +205,6 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
-                setErrorMessage={setErrorMessage}
                 showErrorBar={showErrorBar}
             />
             <DeleteOrder
@@ -171,7 +214,6 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
-                setErrorMessage={setErrorMessage}
                 showErrorBar={showErrorBar}
             />
             <CorrespondenceTemplate

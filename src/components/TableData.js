@@ -9,9 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import { StyledCheckbox } from './Checkbox';
-import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
@@ -23,14 +21,14 @@ import { joinAll, getAgeingBucketString } from '../utils/helpers';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
 
 const headCells = [
-    { id: 'customerName', numeric: false, disablePadding: true, label: 'Customer Name' },
-    { id: 'customerNumber', numeric: false, disablePadding: false, label: 'Customer #' },
-    { id: 'orderNumber', numeric: false, disablePadding: false, label: 'Order #' },
-    { id: 'orderAmount', numeric: true, disablePadding: false, label: 'Order Amount' },
-    { id: 'dueDate', numeric: false, disablePadding: false, label: 'Due Date' },
-    { id: 'predictedPaymentDate', numeric: false, disablePadding: false, label: 'Predicted Payment Date' },
-    { id: 'predictedAgingBucket', numeric: false, disablePadding: false, label: 'Predicted Aging Bucket' },
-    { id: 'notes', numeric: false, disablePadding: false, label: 'Notes' },
+    { id: 'customerName', disablePadding: true, label: 'Customer Name' },
+    { id: 'customerNumber', disablePadding: false, label: 'Customer #' },
+    { id: 'orderNumber', disablePadding: false, label: 'Order #' },
+    { id: 'orderAmount', disablePadding: false, label: 'Order Amount' },
+    { id: 'dueDate', disablePadding: false, label: 'Due Date' },
+    { id: 'predictedPaymentDate', disablePadding: false, label: 'Predicted Payment Date' },
+    { id: 'predictedAgingBucket', disablePadding: false, label: 'Predicted Aging Bucket' },
+    { id: 'notes', disablePadding: false, label: 'Notes' },
 
 ];
 
@@ -57,7 +55,7 @@ function CustomTableHead(props) {
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align={headCell.numeric ? 'right' : 'left'}
+                        align='left'
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         className={elementStyles.tableCell}
                     >
@@ -151,7 +149,9 @@ export default function TableData(props) {
         return (now.getTime() > convertedDueDate.getTime());
     }
     return (
-        <Container>
+        <Container
+            maxWidth="100%"
+        >
             { responseData.length > 0 ? 
                 <TableContainer
                     id="tableScrollable"
@@ -205,11 +205,12 @@ export default function TableData(props) {
                                             classes={{
                                                 selected: colorStyles.selected,
                                             }}
-                                            className={colorStyles.tableRow}
+                                            className={joinAll(colorStyles.tableRow, elementStyles.tableRow)}
                                         >
                                             <TableCell 
                                                 padding="checkbox"
                                                 className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerLeft)}
+                                                align='center'
                                             >
                                                 <StyledCheckbox
                                                     checked={isItemSelected}
@@ -219,75 +220,77 @@ export default function TableData(props) {
                                             <TableCell 
                                                 scope="row"
                                                 className={elementStyles.tableCell}
+                                                align='left'
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.customerName}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell 
                                                 className={elementStyles.tableCell}
+                                                align='left'
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.customerNumber}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell 
-                                                align="right" 
+                                                align="left" 
                                                 className={elementStyles.tableCell}
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {searchActive ? <p dangerouslySetInnerHTML={orderNumber} /> : orderNumber }
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell 
-                                                align="right" 
+                                                align="left" 
                                                 className={elementStyles.tableCell}
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.salesOrderAmount}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell 
-                                                align="right"
+                                                align="left"
                                                 className={
                                                     isPassDueDate(data.dueDate) ? 
                                                         joinAll(colorStyles.textRed,elementStyles.tableCell) : elementStyles.tableCell
                                                 } 
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.dueDate}
                                                 </Typography>
                                             </TableCell>
 
                                             <TableCell 
-                                                align="right"
+                                                align="left"
                                                 className={elementStyles.tableCell}
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.predictedPaymentDate ? data.predictedPaymentDate : "--"}
                                                 </Typography>
                                             </TableCell>
                                             
                                             <TableCell 
-                                                align="right"
+                                                align="left"
                                                 className={elementStyles.tableCell}
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.predictedAgeingBucket ? 
                                                         getAgeingBucketString(data.predictedAgeingBucket) : "--"}
                                                 </Typography>
                                             </TableCell>
                                             
                                             <TableCell 
-                                                align="right"
+                                                align="left"
                                                 className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerRight)}
 
                                             >
-                                                <Typography className={textStyles.tableCellText}>
+                                                <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     { data.notes ? data.notes : '--'}
                                                 </Typography>
                                             </TableCell>

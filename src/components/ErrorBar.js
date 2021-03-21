@@ -5,13 +5,13 @@ import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 import { colors } from '../utils/styles';
 
 export default function ErrorBar(props) {
-    const { open, handleClose }  = props
+    const { open, handleClose, message }  = props
 
     const colorStyles = colors();
 
     const vertical = 'bottom';
     const horizontal = 'left';
-    const message = "Mandatory fields can't be empty";
+    const errorMessage = message ? message : "Mandatory fields can't be empty";
 
     return (
         <SnackBar
@@ -30,7 +30,7 @@ export default function ErrorBar(props) {
             message={(
                 <div>
                     <ReportProblemOutlinedIcon />
-                    {message}
+                    {errorMessage}
                 </div>
             )}
         />

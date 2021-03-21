@@ -6,45 +6,75 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     clientLogo: {
-        top: '20px',
-        left: '30px',
-        width: '44px',
-        height: '46px',
-        background: '#CD7925 0% 0% no-repeat padding-box',
+        height: '2.5rem',
     },
-    clientTitle : {
-        top: '20px',
-        left: '86px',
-        fontSize:'39px',
-        width: '255px',
-        height: '50px',
+    clientTitle: {
+        fontSize: '2rem',
         textAlign: 'left',
-        font: 'normal normal bold 39px/50px Futura PT',
-        letterSpacing: '0px',
+        fontWeight: "800",
         color: '#FFFFFF',
     },
     companyLogo: {
-        top: '22px',
-        left: '843px',
-        width: '235px',
-        height: '50px'
+        height: '2.5rem'
+    },
+    invoiceTitle: {
+        fontSize: "1.5rem"
     }
 })
 
 export default function Navbar() {
     const styles = useStyles();
     return (
-        <nav>
-            <Grid container alignContent='flex-start' direction='row' justify="space-between">
-                <Grid container>
-                    <img src={clientLogo} alt='ABC products logo' />
-                    <Grid item xs={3} className={styles.clientTitle}>ABC Products</Grid>
-                    <img src={logo} alt="highradius logo"/>
+        <Grid
+            container
+            alignContent='flex-start'
+            direction='column'
+            justify="space-between"
+            style={{marginTop:"1.5rem"}}
+        >
+            <Grid
+                container
+                alignContent='flex-start'
+                direction='row'
+                justify="space-between"
+                style={{marginBottom:"1rem"}}
+
+            >
+                <Grid
+                    container
+                    alignContent='flex-start'
+                    direction='row'
+                    justify="flex-start"
+                    spacing={3}
+                >
+                    <Grid
+                        item
+                    >
+                        <img className={styles.clientLogo} src={clientLogo} alt='ABC products logo' />
+                    </Grid>
+                    <Grid
+                        item
+                        style={{paddingLeft:'0px'}}
+                    >
+                        <Typography className={styles.clientTitle}>
+                            ABC Products
+                        </Typography>
+                    </Grid>
+                    <Grid
+                        item
+                        style={{marginLeft:"18em"}}
+                    >
+                        <img className={styles.companyLogo} src={logo} alt="highradius logo" />
+                    </Grid>
                 </Grid>
             </Grid>
-            <Grid>
-                <Typography>Invoice List</Typography>
+            <Grid
+                style={{marginBottom:"1rem"}}
+            >
+                <Typography className={styles.invoiceTitle}>
+                    Invoice List
+                </Typography>
             </Grid>
-        </nav>
+        </Grid>
     )
 }

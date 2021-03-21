@@ -80,15 +80,15 @@ export default function CorrespondenceTemplate(props) {
         <Dialog
             open={isOpen}
             handleClose={handleClose}
-            style={{maxWidth: '90%'}}
+            maxWidth="lg"
         >
             <Paper className={colorStyles.modalGreen}>
                 <DialogTitle className={textStyles.title}>
                     {title}
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent dividers style={{color:'#97A1A9'}}>
                     <DialogContentText className={textStyles.muteText}>
-                        <Typography>
+                        <Typography color='inherit'>
                             Subject: <span style={{color:'white'}}> Order Details - (Account Name)</span>
                         </Typography>
                         <Typography>

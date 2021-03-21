@@ -17,10 +17,18 @@ const colors = makeStyles({
         backgroundColor: '#283A46'
     },
     buttonActiveOutline: {
-        border: '1px solid #14AFF1'
+        border: '1px solid #14AFF1',
+        '&:disabled': {
+            color:'#97A1A9',
+            border: '1px solid #97A1A9',
+
+        },
     },
     buttonActiveFilled: {
-        backgroundColor: '#14AFF1'
+        backgroundColor: '#14AFF1',
+        '&:disabled': {
+            backgroundColor:'#97A1A9'
+        },
     },
     textRed: {
         color: '#FF5B5B',
@@ -57,7 +65,7 @@ const text = makeStyles({
         color: 'white'
     },
     tableCellText: {
-        fontSize: '0.8rem',
+        fontSize: '1rem',
         fontFamily: 'Ubuntu',
         letterSpacing: '0px',
         color: 'white'
@@ -72,7 +80,10 @@ const text = makeStyles({
         color: '#C0C6CA',
         fontSize: '15px',
         fontFamily: 'Ubuntu'
-    }
+    },
+    tableRow: {
+        fontSize: "2rem",
+    },
 })
 
 const element = makeStyles({
@@ -80,7 +91,8 @@ const element = makeStyles({
         height: "2.813em",
     },
     tableCell: {
-        borderBottom: 'none'
+        borderBottom: 'none',
+        padding: '0.6rem',
     },
     tableCellRoundedCornerLeft: {
         borderRadius: '4px 0px 0px 4px'

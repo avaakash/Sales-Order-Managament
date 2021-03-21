@@ -14,7 +14,7 @@ export default function EditOrder(props) {
     
     const { 
         isOpen, handleClose, setResponseData, responseData, selected, 
-        setSelected, setErrorMessage, showErrorBar 
+        setSelected, showErrorBar 
     } = props
     const [formData, setFormData] = React.useState(makeRequestData(edit));
     const [error, setError] = React.useState(() => {
@@ -46,11 +46,9 @@ export default function EditOrder(props) {
                 handleClose();
             })
             .catch((error) => {
-                setErrorMessage(error)
                 showErrorBar();
             })
         } else {
-            setErrorMessage(error)
             showErrorBar();
         }
         

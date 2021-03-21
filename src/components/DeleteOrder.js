@@ -9,7 +9,7 @@ export default function DeleteOrder(props) {
 
     const { 
         isOpen, handleClose, selected, setSelected, responseData, 
-        setResponseData, setErrorMessage, showErrorBar 
+        setResponseData, showErrorBar 
     } = props
 
     const elementStyles = element();
@@ -25,7 +25,6 @@ export default function DeleteOrder(props) {
                 handleClose();
             })
             .catch((error) => {
-                setErrorMessage(error)
                 showErrorBar();
             })
     }

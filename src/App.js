@@ -24,7 +24,9 @@ function App() {
   
   return (
     // <Provider store={store}>
-      <Container>
+      <Container
+        maxWidth="100%"
+      >
         <Grid>
           <Navbar />
         </Grid>
