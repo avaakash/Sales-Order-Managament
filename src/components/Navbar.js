@@ -6,19 +6,19 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     clientLogo: {
-        height: '2.5rem',
+        height: '2rem',
     },
     clientTitle: {
-        fontSize: '2rem',
+        fontSize: '1.7rem',
         textAlign: 'left',
         fontWeight: "800",
         color: '#FFFFFF',
     },
     companyLogo: {
-        height: '2.5rem'
+        height: '2rem'
     },
     invoiceTitle: {
-        fontSize: "1.5rem"
+        fontSize: "1.2rem"
     }
 })
 
@@ -30,7 +30,7 @@ export default function Navbar() {
             alignContent='flex-start'
             direction='column'
             justify="space-between"
-            style={{marginTop:"1.5rem"}}
+            style={{marginTop:"1rem"}}
         >
             <Grid
                 container
@@ -62,7 +62,7 @@ export default function Navbar() {
                     </Grid>
                     <Grid
                         item
-                        style={{marginLeft:"18em"}}
+                        style={{marginLeft:"22rem"}}
                     >
                         <img className={styles.companyLogo} src={logo} alt="highradius logo" />
                     </Grid>

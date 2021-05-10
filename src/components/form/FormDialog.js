@@ -4,11 +4,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CloseSVG from '../../assets/baseline-close-24px.svg'
 
 
 export default function FormDialog(props) {
 
-    const { isOpen, handleClose, body, footer, title } = props;
+    const { isOpen, handleClose, body, footer, title, className } = props;
 
     const elementStyles = element();
     const textStyles = text();
@@ -18,14 +19,24 @@ export default function FormDialog(props) {
             <Dialog
                 open={isOpen}
                 onClose={handleClose}
-                className={elementStyles.modal}
-                hideBackdrop
+                maxWidth="md"
+                className={className}
             >
                 <Paper className={colorStyles.modalGreen}>
                     <DialogTitle className={textStyles.title}>
-                        {title}
+                        <div>
+                            {title}
+                            
+                            <img 
+                                alt='Close Icon'
+                                src={CloseSVG} 
+                                className={elementStyles.closeIcon}
+                                onClick={handleClose}
+                            />
+                        </div>
+
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent dividers>
                         {body}
                     </DialogContent>
                     <DialogActions>

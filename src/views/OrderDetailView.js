@@ -6,15 +6,15 @@ export default function OrderDetailView(props) {
     const { 
         responseData, setResponseData, selected, 
         setSelected, searchActive, searchData, searchQuery,
-        setSearchQuery
+        setSearchQuery, setSearchActive
     } = props
 
     const clearSearch = () => {
         console.log('Clear');
         setSearchQuery("");
+        setSearchActive(false);
       }
     
-
     return (
         <Grid>
             <TableData

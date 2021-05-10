@@ -1,6 +1,8 @@
 import Field from './Field';
 import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
+import { pxToRem } from '../../utils/sizing';
+import Grid from '@material-ui/core/Grid';
 
 export default function Form(props) {
     const { fields, formData, setFormData, error, setError } = props;
@@ -9,7 +11,7 @@ export default function Form(props) {
         if (e.target.value != null && e.target.value.length > 0) {
             setError({
                 ...error,
-                [e.target.name] : false
+                [e.target.name]: false
             })
         }
         setFormData({
@@ -29,22 +31,36 @@ export default function Form(props) {
     return (
         <div>
             {
-                fields.map((field, index) => {
-                    return (
-                        <FormControl
-                            key={index}
-                            variant='outlined'
-                        >
-                            <Field
-                                field={field}
-                                value={formData}
-                                handleChange={handleChange}
-                                handleDateChange={(e, fieldName) => handleDateChange(e, fieldName)}
-                                error={error[field.fieldName]}
-                            />
-                        </FormControl>
-                    )
-                })
+                <Grid
+                    container
+                    justify='space-evenly'
+                    spacing={2}
+                > {
+                        fields.map((field, index) => {
+                            return (
+                                <Grid
+                                    item
+                                    style={{ margin: pxToRem(18) }}
+
+                                >
+                                    <FormControl
+                                        key={index}
+                                        variant='outlined'
+                                        size='medium'
+                                        
+                                    >
+                                        <Field
+                                            field={field}
+                                            value={formData}
+                                            handleChange={handleChange}
+                                            handleDateChange={(e, fieldName) => handleDateChange(e, fieldName)}
+                                            error={error[field.fieldName]}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                            )
+                        })}
+                </Grid>
             }
         </div >
     )

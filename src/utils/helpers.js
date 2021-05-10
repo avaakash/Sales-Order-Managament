@@ -7,11 +7,13 @@ const makeRequestData = (formData, oldData) => {
     if (oldData == null) {
         formData.map((field) => {
             data[field.fieldName] = field.value;
+            return null;
         })
     } else {
         oldData = oldData[0];
         formData.map((field) => {
-            data[field.fieldName] = oldData[field.fieldName];
+            data[field.fieldName] = oldData[field.fieldName] ? oldData[field.fieldName] : '';
+            return null;
         });
     }
     return data;
@@ -49,6 +51,7 @@ const getAgeingBucketString = (x) => {
         case 3: return '30-45 days';
         case 4: return '45-60 days';
         case 5: return '>60 days';
+        default: return '--'
     }
 }
 
@@ -56,7 +59,7 @@ const clearFormData = (data, setData) => {
     console.log('clear data');
     let newData = {};
     for(let key in data) {
-        if(key == 'dueDate') {
+        if(key === 'dueDate') {
             newData[key] = null;
         } else {
             newData[key] = "";

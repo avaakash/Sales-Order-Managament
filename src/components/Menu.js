@@ -1,12 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import RemoveIcon from '@material-ui/icons/Remove';
-import ModalForm from './form/FormDialog';
 import AddOrder from './AddOrder';
 import DeleteOrder from './DeleteOrder';
 import EditOrder from './EditOrder';
@@ -33,8 +30,7 @@ export default function Menu(props) {
 
     const {
         setResponseData, responseData, selected, setSelected,
-        setSearchData, setSearchActive, setSearchQuery,
-        showErrorBar, clearSearch
+        setSearchData, setSearchActive, setSearchQuery
     } = props;
 
     const handleAddClose = () => {
@@ -93,6 +89,7 @@ export default function Menu(props) {
                 justify="flex-start"
                 alignItems="baseline"
                 xs={6}
+                style={{marginBottom:"15px"}}
             >
                 <Grid
                     item
@@ -205,7 +202,7 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
-                showErrorBar={showErrorBar}
+                showErrorBar={showError}
             />
             <DeleteOrder
                 isOpen={deleteOpen}
@@ -214,7 +211,7 @@ export default function Menu(props) {
                 responseData={responseData}
                 setSelected={setSelected}
                 selected={selected}
-                showErrorBar={showErrorBar}
+                showErrorBar={showError}
             />
             <CorrespondenceTemplate
                 isOpen={correspondenceOpen}

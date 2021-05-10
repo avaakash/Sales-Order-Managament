@@ -3,7 +3,8 @@ const emptyValidator = (formData, setError, error) => {
     let key;
     let formErrors = error;
     for(key in formData) {
-        if (formData[key] == null || formData[key].length <= 0) {
+        console.log(key);
+        if (key !== 'notes' && (formData[key] == null || formData[key].length <= 0)) {
             flag = false;
             formErrors[key] = true
         } else {

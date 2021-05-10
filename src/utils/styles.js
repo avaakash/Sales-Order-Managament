@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { pxToRem } from './sizing';
 
 const colors = makeStyles({
     lightBackground: {
@@ -55,44 +56,53 @@ const colors = makeStyles({
 
 const text = makeStyles({
     title: {
-        color: 'white',
+        color: '#FFFFFF',
         fontSize: '28px'
     },
     buttonText: {
-        fontSize: '1em',
+        fontSize: pxToRem(20),
         fontFamily: 'Ubuntu',
         letterSpacing: '0px',
-        color: 'white'
+        color: '#FFFFFF'
     },
     tableCellText: {
-        fontSize: '1rem',
+        fontSize: pxToRem(20),
         fontFamily: 'Ubuntu',
         letterSpacing: '0px',
-        color: 'white'
+        color: '#FFFFFF'
     },
     headerCellText: {
-        fontSize: '0.8rem',
+        fontSize: pxToRem(18),
         fontFamily: 'Ubuntu',
         letterSpacing: '0px',
         color: '#97A1A9'
     },
+    smallWhite: {
+        fontSize: pxToRem(18),
+        fontFamily: 'Ubuntu',
+        letterSpacing: '0px',
+        color: '#FFFFFF'
+    },
     muteText: {
         color: '#C0C6CA',
         fontSize: '15px',
-        fontFamily: 'Ubuntu'
+        fontFamily: 'Ubuntu',
+        marginBottom:'2rem'
     },
     tableRow: {
-        fontSize: "2rem",
+        fontSize: "1.3rem",
     },
 })
 
 const element = makeStyles({
     button: {
-        height: "2.813em",
+        height: pxToRem(45),
+        borderRadius: pxToRem(10),
+        padding: pxToRem(20),
     },
     tableCell: {
-        borderBottom: 'none',
-        padding: '0.6rem',
+        borderBottom: 'none !important',
+        padding: pxToRem(10),
     },
     tableCellRoundedCornerLeft: {
         borderRadius: '4px 0px 0px 4px'
@@ -100,19 +110,71 @@ const element = makeStyles({
     tableCellRoundedCornerRight: {
         borderRadius: '0px 4px 4px 0px'
     },
-    inputSingle: {
+    searchBar: {
         backgroundColor: '#283A46',
-        height: '45px',
-        widhth: '300px',
-        borderRadius: '10px'
+        // border: '1px solid #356680',
+        height: pxToRem(45),
+        widhth: pxToRem(191),
+        borderRadius: pxToRem(10)
     },
-    modal: {
+    addModal: {
+        position:  'fixed',
+        width: pxToRem(1106),
+        top: pxToRem(509),
+        marginLeft: pxToRem(407)
+    },
+    editModal: {
+        position:  'fixed',
+        width: pxToRem(543),
+        top: pxToRem(210),
+        marginLeft: pxToRem(689),
+    },
+    deleteModal: {
+        position:  'fixed',
+        width: pxToRem(611),
+        top: pxToRem(294),
+        marginLeft: pxToRem(654)
+    },
+    correspondenceModal: {
         position:  'fixed',
         width: '800px',
         top: '403px',
         left: 'calc(50% - 300px)',
         bottom: '40px'
     },
+    imageIcon: {
+        display: 'flex',
+        paddingTop:"0.3rem",
+        height: '65%',
+    },
+    closeIcon: {
+        cursor:'pointer', 
+        float:'right', 
+        marginTop: '5px', 
+        width: '20px'
+    },
+    dropdown: {
+        height: pxToRem(20),
+        fontSize: pxToRem(18)
+    },
+    input: {
+        borderRadius: pxToRem(10),
+        borderColor: '#356680',
+        '&$hover': {
+            borderRadius: pxToRem(10),
+            borderColor: '#356680',
+        }
+    },
+    inputOutline: {
+        borderColor: '#356680',
+    },
+    inputFocused: {
+        color: 'white',
+        borderColor: '#356680',
+    },
+    inputLabel: {
+        color: '#97A1A9',
+    }
 })
 
 export { colors, text, element }

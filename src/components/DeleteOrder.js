@@ -1,15 +1,19 @@
 import React from 'react';
 import deleteOrder from '../services/deleteOrder';
 import FormDialog from './form/FormDialog';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid'
 import { element, colors, text } from '../utils/styles';
-import { Button, ButtonGroup, Typography, } from '@material-ui/core';
 import { joinAll } from '../utils/helpers';
+import { pxToRem } from '../utils/sizing';
+
 
 export default function DeleteOrder(props) {
 
-    const { 
-        isOpen, handleClose, selected, setSelected, responseData, 
-        setResponseData, showErrorBar 
+    const {
+        isOpen, handleClose, selected, setSelected, responseData,
+        setResponseData, showErrorBar
     } = props
 
     const elementStyles = element();
@@ -29,38 +33,54 @@ export default function DeleteOrder(props) {
             })
     }
 
-    const title = 'Delete Invoice(s)'
+    const title = 'Delete record(s)?'
     const body = (
         <div>
-            <h2>Delete record(s)?</h2>
-            <p>You'll lose your record(s) after this action. We can't recover them once you delete</p>
-            <p>Are you sure you want to <span>permanently delete</span> them?</p>
+            <p className={textStyles.muteText}>You'll lose your record(s) after this action. We can't recover them once you delete</p>
+            <p className={textStyles.muteText}>Are you sure you want to <span style={{ color: '#FF5E5E' }}>permanently delete</span> them?</p>
         </div>
     )
 
     const footer = (
-        <ButtonGroup>
-            <Button
-                className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
-                type="button"
-                id="cancel"
-                onClick={handleClose}
+        <Grid
+            container
+            direction='row'
+            justify='flex-end'
+            alignItems='center'
+            spacing={2}
+            style={{
+                marginTop: pxToRem(5),
+                marginBottom: pxToRem(5)
+            }}
+        >
+            <Grid item>
+                <Button
+                    className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
+                    type="button"
+                    id="cancel"
+                    onClick={handleClose}
+                >
+                    <Typography className={textStyles.buttonText}>
+                        Cancel
+                    </Typography>
+                </Button>
+            </Grid>
+            <Grid 
+                item
+                style={{marginRight:'1rem'}}
             >
-                <Typography className={textStyles.buttonText}>
-                    Cancel
-        </Typography>
-            </Button>
-            <Button
-                type="button"
-                className={joinAll(colorStyles.buttonActiveFilled, elementStyles.button)}
-                id="delete"
-                onClick={handleDelete}
-            >
-                <Typography className={textStyles.buttonText}>
-                    Delete
-        </Typography>
-            </Button>
-        </ButtonGroup>
+                <Button
+                    type="button"
+                    className={joinAll(colorStyles.buttonActiveFilled, elementStyles.button)}
+                    id="delete"
+                    onClick={handleDelete}
+                >
+                    <Typography className={textStyles.buttonText}>
+                        Delete
+                    </Typography>
+                </Button>
+            </Grid>
+        </Grid>
     )
 
     return (

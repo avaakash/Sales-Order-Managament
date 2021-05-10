@@ -5,10 +5,7 @@ import Menu from './components/Menu';
 import OrderTable from './views/OrderDetailView';
 import { Container } from '@material-ui/core';
 import React from 'react';
-// import { store } from './reducers/store';
-// import { Provider } from 'react-redux';
 import Navbar from './components/Navbar';
-// import { colors } from './utils/styles';
 
 
 function App() {
@@ -19,11 +16,9 @@ function App() {
   const [searchData, setSearchData] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  // const styles = colors();
 
   
   return (
-    // <Provider store={store}>
       <Container
         maxWidth="100%"
       >
@@ -42,7 +37,6 @@ function App() {
                 setSearchActive={setSearchActive}
                 setSearchData={setSearchData}
                 setSearchQuery={setSearchQuery}
-                // clearSearch={clearSearch}
               />
             </Grid>
             <Grid>
@@ -62,7 +56,6 @@ function App() {
           </Paper>
         </Grid>
       </Container>
-    // </Provider>
   );
 }
 

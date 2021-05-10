@@ -1,4 +1,4 @@
-import { Button, SnackbarContent, Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import SnackBar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';

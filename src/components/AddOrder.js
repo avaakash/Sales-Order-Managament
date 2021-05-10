@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, ButtonGroup, Typography, } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid'
 import { element, colors, text } from '../utils/styles';
 import { joinAll } from '../utils/helpers';
 import Form from './form/Form';
@@ -8,6 +10,8 @@ import { makeRequestData, clearFormData } from '../utils/helpers';
 import FormDialog from './form/FormDialog';
 import { add } from '../utils/formFields';
 import { emptyValidator } from '../utils/errors';
+import { pxToRem } from '../utils/sizing';
+
 
 export default function AddOrder(props) {
 
@@ -15,7 +19,7 @@ export default function AddOrder(props) {
     const textStyles = text();
     const colorStyles = colors();
 
-    const { 
+    const {
         isOpen, handleClose, setResponseData, responseData, showErrorBar
     } = props;
 
@@ -25,6 +29,7 @@ export default function AddOrder(props) {
         let errorFields = {}
         add.map((field) => {
             errorFields[field.fieldName] = null
+            return null;
         })
         return errorFields;
     })
@@ -33,13 +38,13 @@ export default function AddOrder(props) {
     const handleSubmit = () => {
         if (emptyValidator(formData, setError, error)) {
             addOrder(formData)
-            .then((res) => {
-                handleClose();
-                setResponseData([res.data, ...responseData])
-            })
-            .catch((error) => {
-                showErrorBar();
-            })
+                .then((res) => {
+                    handleClose();
+                    setResponseData([res.data, ...responseData])
+                })
+                .catch((error) => {
+                    showErrorBar();
+                })
         } else {
             showErrorBar();
         }
@@ -59,17 +64,19 @@ export default function AddOrder(props) {
     )
 
     const footer = (
-        <div>
-            <Button
-                type="button"
-                id="cancel"
-                onClick={handleClose}
+        <Grid
+            container
+            direction='row'
+            justify='flex-end'
+            alignItems='center'
+            style={{
+                marginTop: pxToRem(5),
+                marginBottom: pxToRem(5)
+            }}
+        >
+            <Grid 
+                item
             >
-                <Typography className={joinAll(textStyles.buttonText, colorStyles.textBlue)}>
-                    Cancel
-                </Typography>
-            </Button>
-            <ButtonGroup>
                 <Button
                     className={joinAll(colorStyles.buttonActiveOutline, elementStyles.button)}
                     type="button"
@@ -78,8 +85,13 @@ export default function AddOrder(props) {
                 >
                     <Typography className={textStyles.buttonText}>
                         Clear
-                </Typography>
+                        </Typography>
                 </Button>
+            </Grid>
+            <Grid 
+                item
+                style={{marginLeft:'3%'}}
+            >
                 <Button
                     type="submit"
                     className={joinAll(colorStyles.buttonActiveFilled, elementStyles.button)}
@@ -88,10 +100,10 @@ export default function AddOrder(props) {
                 >
                     <Typography className={textStyles.buttonText}>
                         Add
-                </Typography>
+                        </Typography>
                 </Button>
-            </ButtonGroup>
-        </div>
+            </Grid>
+        </Grid>
     )
     return (
         <FormDialog
@@ -100,6 +112,7 @@ export default function AddOrder(props) {
             body={body}
             footer={footer}
             title={title}
+            className={elementStyles.addModal}
         />
     )
 }

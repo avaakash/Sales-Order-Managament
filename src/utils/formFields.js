@@ -46,7 +46,7 @@ const add = [
 const edit = [
     {
         label: 'Order No.',
-        fieldName: 'salesOrderID',
+        fieldName: 'salesDocID',
         type: 'hidden',
         value: '',
     },

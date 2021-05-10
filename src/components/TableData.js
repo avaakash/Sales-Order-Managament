@@ -6,8 +6,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { StyledCheckbox } from './Checkbox';
 import Container from '@material-ui/core/Container';
@@ -19,16 +17,19 @@ import { colors, element, text } from '../utils/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { joinAll, getAgeingBucketString } from '../utils/helpers';
 import ErrorOutlineOutlinedIcon from '@material-ui/icons/ErrorOutlineOutlined';
+import CustomCheckbox from '../assets/Rectangle_1096.svg';
+import { Icon } from '@material-ui/core';
+
 
 const headCells = [
-    { id: 'customerName', disablePadding: true, label: 'Customer Name' },
-    { id: 'customerNumber', disablePadding: false, label: 'Customer #' },
-    { id: 'orderNumber', disablePadding: false, label: 'Order #' },
-    { id: 'orderAmount', disablePadding: false, label: 'Order Amount' },
-    { id: 'dueDate', disablePadding: false, label: 'Due Date' },
-    { id: 'predictedPaymentDate', disablePadding: false, label: 'Predicted Payment Date' },
-    { id: 'predictedAgingBucket', disablePadding: false, label: 'Predicted Aging Bucket' },
-    { id: 'notes', disablePadding: false, label: 'Notes' },
+    { id: 'customerName', disablePadding: true, align:false, label: 'Customer Name' },
+    { id: 'customerNumber', disablePadding: false, align:false, label: 'Customer #' },
+    { id: 'orderNumber', disablePadding: false, align:false, label: 'Order #' },
+    { id: 'orderAmount', disablePadding: false, align:true, label: 'Order Amount' },
+    { id: 'dueDate', disablePadding: false, align:true, label: 'Due Date' },
+    { id: 'predictedPaymentDate', disablePadding: true, align:false, label: 'Predicted Payment Date' },
+    { id: 'predictedAgingBucket', disablePadding: false, align:false, label: 'Predicted Aging Bucket' },
+    { id: 'notes', disablePadding: false, align:false, label: 'Notes' },
 
 ];
 
@@ -40,7 +41,7 @@ function CustomTableHead(props) {
     return (
         <TableHead>
             <TableRow>
-                <TableCell 
+                <TableCell
                     align="left"
                     padding="checkbox"
                     className={elementStyles.tableCell}
@@ -50,17 +51,22 @@ function CustomTableHead(props) {
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{ 'aria-label': 'select all orders' }}
+                        icon={
+                            <Icon>
+                                <img alt='checkbox' className={elementStyles.imageIcon} src={CustomCheckbox} />
+                            </Icon>
+                            }
                     />
                 </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
                         key={headCell.id}
-                        align='left'
+                        align={headCell.align ? 'right': 'left'}
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         className={elementStyles.tableCell}
                     >
                         <Typography className={textStyles.headerCellText}>
-                            { headCell.label}
+                            {headCell.label}
                         </Typography>
                     </TableCell>
                 ))}
@@ -76,11 +82,11 @@ export default function TableData(props) {
 
     const URL = `${SERVER_URL}${ROLL_NUMBER}/ListSalesOrder`;
 
-    const { 
-        responseData, setResponseData, selected, setSelected, 
-        searchActive, searchQuery, clearSearch 
+    const {
+        responseData, setResponseData, selected, setSelected,
+        searchActive, searchQuery
     } = props
-    
+
     const [hasNext, setHasNext] = React.useState(!searchActive);
     const [pageNumber, setPageNumber] = React.useState(0);
 
@@ -126,23 +132,23 @@ export default function TableData(props) {
         setSelected(newSelected);
     };
 
-    const fetchDataOnIntialLoad = React.useEffect(() => {
+    React.useEffect(() => {
         if (!searchActive) {
             fetchData();
         }
     }, [])
 
     const highlightSearchedText = (text) => {
-        if(searchActive) {
+        if (searchActive) {
             let newText = text.replace(new RegExp(searchQuery, "gi"), (match) => `<mark>${match}</mark>`);
-            return {__html: newText};
+            return { __html: newText };
         } else {
             return text;
         }
     }
 
     const isSelected = (id) => selected.indexOf(id) !== -1;
-    
+
     const isPassDueDate = (dueDate) => {
         const now = new Date();
         const convertedDueDate = new Date(dueDate);
@@ -152,7 +158,7 @@ export default function TableData(props) {
         <Container
             maxWidth="100%"
         >
-            { responseData.length > 0 ? 
+            { responseData.length > 0 ?
                 <TableContainer
                     id="tableScrollable"
                     style={{
@@ -168,10 +174,10 @@ export default function TableData(props) {
                         loader={
                             <div
                                 style={{
-                                    width:"100px",
-                                    height:"100px",
-                                    margin:'auto',
-                                    padding:'50px'
+                                    width: "100px",
+                                    height: "100px",
+                                    margin: 'auto',
+                                    padding: '50px'
                                 }}>
                                 <CircularProgress color="secondary" />
                             </div>
@@ -185,7 +191,7 @@ export default function TableData(props) {
                                 numSelected={selected.length}
                                 rowCount={responseData.length}
                                 onSelectAllClick={handleSelectAllClick}
-                                
+
                             />
                             <TableBody>
                                 {responseData.map((data, index) => {
@@ -207,7 +213,7 @@ export default function TableData(props) {
                                             }}
                                             className={joinAll(colorStyles.tableRow, elementStyles.tableRow)}
                                         >
-                                            <TableCell 
+                                            <TableCell
                                                 padding="checkbox"
                                                 className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerLeft)}
                                                 align='center'
@@ -215,9 +221,14 @@ export default function TableData(props) {
                                                 <StyledCheckbox
                                                     checked={isItemSelected}
                                                     inputProps={{ 'aria-labelledby': labelId }}
+                                                    icon={
+                                                    <Icon>
+                                                        <img alt='checkbox' className={elementStyles.imageIcon} src={CustomCheckbox} />
+                                                    </Icon>
+                                                    }
                                                 />
                                             </TableCell>
-                                            <TableCell 
+                                            <TableCell
                                                 scope="row"
                                                 className={elementStyles.tableCell}
                                                 align='left'
@@ -227,7 +238,7 @@ export default function TableData(props) {
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell 
+                                            <TableCell
                                                 className={elementStyles.tableCell}
                                                 align='left'
                                             >
@@ -236,17 +247,17 @@ export default function TableData(props) {
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell 
-                                                align="left" 
+                                            <TableCell
+                                                align="left"
                                                 className={elementStyles.tableCell}
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
-                                                    {searchActive ? <p dangerouslySetInnerHTML={orderNumber} /> : orderNumber }
+                                                    {searchActive ? <p dangerouslySetInnerHTML={orderNumber} /> : orderNumber}
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell 
-                                                align="left" 
+                                            <TableCell
+                                                align="right"
                                                 className={elementStyles.tableCell}
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
@@ -254,44 +265,44 @@ export default function TableData(props) {
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell 
-                                                align="left"
+                                            <TableCell
+                                                align="right"
                                                 className={
-                                                    isPassDueDate(data.dueDate) ? 
-                                                        joinAll(colorStyles.textRed,elementStyles.tableCell) : elementStyles.tableCell
-                                                } 
+                                                    isPassDueDate(data.dueDate) ?
+                                                        joinAll(colorStyles.textRed, elementStyles.tableCell) : elementStyles.tableCell
+                                                }
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.dueDate}
                                                 </Typography>
                                             </TableCell>
 
-                                            <TableCell 
-                                                align="left"
+                                            <TableCell
+                                                align="right"
                                                 className={elementStyles.tableCell}
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
                                                     {data.predictedPaymentDate ? data.predictedPaymentDate : "--"}
                                                 </Typography>
                                             </TableCell>
-                                            
-                                            <TableCell 
+
+                                            <TableCell
                                                 align="left"
                                                 className={elementStyles.tableCell}
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
-                                                    {data.predictedAgeingBucket ? 
+                                                    {data.predictedAgeingBucket ?
                                                         getAgeingBucketString(data.predictedAgeingBucket) : "--"}
                                                 </Typography>
                                             </TableCell>
-                                            
-                                            <TableCell 
+
+                                            <TableCell
                                                 align="left"
                                                 className={joinAll(elementStyles.tableCell, elementStyles.tableCellRoundedCornerRight)}
 
                                             >
                                                 <Typography className={textStyles.tableCellText} variant='inherit'>
-                                                    { data.notes ? data.notes : '--'}
+                                                    {data.notes ? data.notes : '--'}
                                                 </Typography>
                                             </TableCell>
                                         </TableRow>
@@ -302,17 +313,50 @@ export default function TableData(props) {
                     </InfiniteScroll>
                 </TableContainer>
                 :
-                <Grid>
-                    <ErrorOutlineOutlinedIcon />
-                    <Typography>
-                        No results found
+                <Container
+                    maxWidth='lg'
+                >
+                    <Grid
+                        container
+                        direction='column'
+                        justify='center'
+                        alignItems='center'
+                        style={{
+                            marginTop:'15%',
+                            marginBottom:'15%',
+                        }}
+                    >
+                        <Grid item>
+                            <ErrorOutlineOutlinedIcon
+                                style={{color:'red'}}
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Typography>
+                                No results found
                     </Typography>
-                    <Typography>
-                        Tru adjusting search to find what you are looking for.
+                        </Grid>
+                        <Grid item>
+                            <Typography
+                                style={{
+                                    color:'#C0C6CA',
+                                    fontSize: '0.8rem',
+                                    marginBottom:'1rem'
+                                }}
+                            >
+                                Try adjusting search to find what you are looking for.
                     </Typography>
-                    <Button onClick={clearSearch}>Clear Search</Button>
-                </Grid>
-                
+                        </Grid>
+                        <Grid item>
+                            <Button 
+                                style={{color:'#14AFF1'}}
+                            >
+                                Clear Search
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Container>
+
             }
         </Container>
     );
